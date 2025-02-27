@@ -10,15 +10,25 @@ import java.net.Socket;
         public static void main(String[] args) throws IOException {
             ServerSocket serverSocket = new ServerSocket(9000);
             System.out.println("Открыт сокет на порту 9000, ждём подключения");
-            Socket clientSocket = serverSocket.accept(); // открывает сокет и блокируется пока не будет подключения
-            System.out.println("Подключен клиент");
+            while(true){
+                Socket clientSocket = serverSocket.accept(); // открывает сокет и блокируется пока не будет подключения
+                System.out.println("Подключен клиент");
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                out.println("Получена строка: " + inputLine);
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                out.println("welcome to socket");
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    out.println("String recieved: " + inputLine);
+                    if(inputLine.equals("exit")){
+                        System.exit(0);
+                    }
+                    else if(inputLine.equals("close")){
+                        clientSocket.close();
+                        break;
+                    }
+                }
             }
+
         }
     }
